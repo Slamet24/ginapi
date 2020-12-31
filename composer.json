@@ -1,0 +1,15 @@
+{
+    "name": "slamet/ginapi",
+    "authors": [
+        {
+            "name": "Slamet24",
+            "email": "slametfaisal1@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "app\\":"./"
+        }
+    },
+    "require": {}
+}
