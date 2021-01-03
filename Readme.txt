@@ -7,4 +7,12 @@ Sebelum memakainya mohon sudah menginstall composer
 Lalu, buka terminal di folder yang sudah kamu clone
 Dan jalankan perintah composer update
 
+Tutorial menjalankan server:
+- buka CMD
+- arahkan ke direktori public contoh: cd c:/xampp/htdocs/ginapi/public
+- lalu, tulis perintah php -S localhost:3000
+
+#note untuk hifni :
+username,password,port dan nama db silahkan diganti.
+
 Jika masih ada masalah, mohon chat digrup.

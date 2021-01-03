@@ -18,12 +18,19 @@
 namespace app\controllers;
 use app\core\Controller;
 use app\core\Request;
+use app\models\Database;
 
 class Contoh extends Controller {
 
     public function subContoh(Request $request)
     {
+        $db = new Database();
         $body = $request->getBody();
-        return $this->jsonResponse(200,["message"=>$body['id']]);
+        return $this->jsonResponse(200,["message"=>$body]);
+    }
+
+    public function contohCtrl(Request $request)
+    {
+        return $this->jsonResponse(200,["message"=>"success"]);
     }
 }
