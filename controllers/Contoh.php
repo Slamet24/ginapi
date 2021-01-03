@@ -13,7 +13,7 @@
         // jika ingin mengambil data var2, maka :
         $body = $request->getBody();
         $body['var2'];
-        // Cara ini bisa digunakan di baik method get/post
+        // Cara ini bisa digunakan di program baik method get/post
 */
 namespace app\controllers;
 use app\core\Controller;
