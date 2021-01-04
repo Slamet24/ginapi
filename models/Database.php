@@ -7,12 +7,12 @@ class Database{
 	private \PDO $pdo;
 	private $db = "pgsql";
 	private $serv = "localhost";
-    private $user = "sha2";
-    private $pass = "ginapi";
-    private $dbname = "core_api";
+    private $user = "postgres";
+    private $pass = "Nidumila";
+    private $dbname = "ginapi";
     
     public function __construct(){
-        $this->pdo = new \PDO("$this->db:host=$this->serv;port=5433;dbname=$this->dbname", $this->user, $this->pass);
+        $this->pdo = new \PDO("$this->db:host=$this->serv;port=5432;dbname=$this->dbname", $this->user, $this->pass);
     }
 
     public function getInstance(){
@@ -26,13 +26,13 @@ class Database{
     public function selectAll($tabel)
     {
         $hasil = $this->connect->query("SELECT * FROM $tabel");
-        $row = $hasil->fetchAll(PDO::FETCH_ASSOC);
+        $row = $hasil->fetchAll(\PDO::FETCH_ASSOC);
 		return $row;
     }
 
     public function select($tabel, $key, $kondisi){
         $hasil = $this->konek->query("SELECT * FROM $tabel WHERE $key = '$kondisi'");
-        $row = $hasil->fetchAll(PDO::FETCH_ASSOC);
+        $row = $hasil->fetchAll(\PDO::FETCH_ASSOC);
         return $row;
     }
-}?>
+}
