@@ -4,7 +4,7 @@ namespace app\models;
 class Database{
 
     private static $_instance = null;
-	private \PDO $pdo;
+    public \PDO $pdo;
 	private $db = "pgsql";
 	private $serv = "localhost";
     private $user = "sha2";
@@ -13,6 +13,11 @@ class Database{
     
     public function __construct(){
         $this->pdo = new \PDO("$this->db:host=$this->serv;port=5433;dbname=$this->dbname", $this->user, $this->pass);
+    }
+
+    public function check()
+    {
+        var_dump($this->pdo);
     }
 
     public function getInstance(){
@@ -25,14 +30,27 @@ class Database{
     
     public function selectAll($tabel)
     {
-        $hasil = $this->connect->query("SELECT * FROM $tabel");
-        $row = $hasil->fetchAll(PDO::FETCH_ASSOC);
-		return $row;
+        $hasil = $this->pdo->query("SELECT * FROM $tabel");
+        $stocks = [];
+        while ($row = $hasil->fetch(\PDO::FETCH_ASSOC)) {
+            $stocks[] = [
+                'id_pertanyaan' => $row['q_id'],
+                'pertanyaan' => $row['question']
+            ];
+        }
+        return $stocks;
     }
 
     public function select($tabel, $key, $kondisi){
-        $hasil = $this->konek->query("SELECT * FROM $tabel WHERE $key = '$kondisi'");
-        $row = $hasil->fetchAll(PDO::FETCH_ASSOC);
-        return $row;
+        $hasil = $this->pdo->query("SELECT * FROM $tabel WHERE $key = '$kondisi'");
+        $stocks = [];
+        while ($row = $hasil->fetch(\PDO::FETCH_ASSOC)) {
+            $stocks[] = [
+                'id' => $row['sq_id'],
+                'id_pertanyaan' => $row['q_id'],
+                'sub' => $row['sub_question']
+            ];
+        }
+        return $stocks;
     }
 }?>
