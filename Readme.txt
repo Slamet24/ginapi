@@ -12,7 +12,4 @@ Tutorial menjalankan server:
 - arahkan ke direktori public contoh: cd c:/xampp/htdocs/ginapi/public
 - lalu, tulis perintah php -S localhost:3000
 
-#note untuk hifni :
-username,password,port dan nama db silahkan diganti.
-
 Jika masih ada masalah, mohon chat digrup.

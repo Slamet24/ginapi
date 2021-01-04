@@ -22,15 +22,26 @@ use app\models\Database;
 
 class Contoh extends Controller {
 
-    public function subContoh(Request $request)
+    public function getMainMenu(Request $request)
+    {
+        $db = new Database();
+        $q = $db->selectAll("pertanyaan");
+        return $this->jsonResponse(200,["message"=>"success","menu"=>$q]);
+    }
+
+    public function setMainMenu(Request $request)
     {
         $db = new Database();
         $body = $request->getBody();
-        return $this->jsonResponse(200,["message"=>$body]);
-    }
-
-    public function contohCtrl(Request $request)
-    {
-        return $this->jsonResponse(200,["message"=>"success"]);
+        if (!$body['id']) {
+            $q = $db->selectAll("pertanyaan");
+            return $this->jsonResponse(200,["message"=>"success","menu"=>$q]);
+        } else if (count($body) > 1 && $body['id'] && $body['sub1']) {
+            $q = $db->getInstance()->pdo->query("SELECT * FROM pertanyaan JOIN sub_pertanyaan ON pertanyaan.q_id=sub_pertanyaan.q_id WHERE pertanyaan.q_id='sha20$body[id]' AND sq_id='sha2$body[id]$body[sub1]'");
+            $row = $q->fetch(\PDO::FETCH_ASSOC);
+            return $this->jsonResponse(200,["message"=>"success","menu"=>$row]);
+        }
+        $q = $db->select("sub_pertanyaan","q_id","sha20$body[id]");
+        return $this->jsonResponse(200,["message"=>"success","menu"=>$q]);
     }
 }
