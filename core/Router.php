@@ -30,7 +30,7 @@ class Router {
         $callback = $this->routes[$method][$path] ?? false;
 
         if ($callback === false) {
-            return $this->response->jsonOut(404,["message"=>"Not Found"]);
+            return $this->response->jsonOut(404,["message"=>"Maaf Halaman yang anda maksud tidak ada"]);
         }
 
         if (is_array($callback)) {
