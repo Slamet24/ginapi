@@ -18,9 +18,22 @@
 namespace app\controllers;
 use app\core\Controller;
 use app\core\Request;
-use app\models\Database;
+use app\core\Database;
+use Nowakowskir\JWT\JWT;
+use Nowakowskir\JWT\TokenDecoded;
+use Nowakowskir\JWT\TokenEncoded;
+use Nowakowskir\JWT\Exceptions\IntegrityViolationException;
+use Nowakowskir\JWT\Exceptions\AlgorithmMismatchException;
+use Nowakowskir\JWT\Exceptions\TokenExpiredException;
 
 class Contoh extends Controller {
+
+    public function cektoken(Request $request)
+    {
+        $tokenDecoded = new TokenDecoded(['username' => 'slametfaisal1@gmail.com'], ['alg' => 'HS512','typ' => 'JWT']);
+        $tokenEncoded = $tokenDecoded->encode('sha2gin', JWT::ALGORITHM_HS512);
+        return $this->jsonResponse(200,["token" => $tokenEncoded->toString(),"expired_on" => date("h:i",time() + 60)]);
+    }
 
     public function getMainMenu(Request $request)
     {
@@ -31,6 +44,7 @@ class Contoh extends Controller {
 
     public function setMainMenu(Request $request)
     {
+        error_reporting(0);
         $db = new Database();
         $body = $request->getBody();
         if (!$body['id']) {
