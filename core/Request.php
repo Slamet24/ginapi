@@ -23,7 +23,7 @@ class Request {
         return $this->method() === 'get';
     }
 
-    public function idPost()
+    public function isPost()
     {
         return $this->method() === 'post';
     }

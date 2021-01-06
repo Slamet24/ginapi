@@ -11,17 +11,19 @@ class User extends Controller {
     {
         $db = new Database();
         $t = new Tokens();
-        if ($request->is_post()) {
+        if ($request->isPost()) {
             $body = $request->getBody();
+            $q = $db->getInstance()->pdo->query("SELECT * FROM users WHERE email = '$body[email]'");
+            $user = $q->fetch(\PDO::FETCH_ASSOC);
             if (password_verify($body['sandi'],$user['password'])) {
-                $dateAccess = date("Y-m-d");
                 $payload = [
                     'email' => $user['email'],
                     'sandi' => $user['password']
                 ];
-                $user = $db->getInstance()->pdo->query("UPDATE users SET date_access = $dateAccess WHERE email = '$body[email]'");
+                $dateAccess = date("Y-m-d h:i");
+                $db->getInstance()->pdo->query("UPDATE users SET date_access = '$dateAccess' WHERE email = '$body[email]'");
                 $token = $t->getToken($payload);
-                $codeauth = $t->validatToken($token);
+                $codeauth = $t->validateToken($token);
                 switch ($codeauth) {
                     case 400:
                         return $this->jsonResponse(400,['message'=>'token tidak valid']);
@@ -31,6 +33,14 @@ class User extends Controller {
                         return $this->jsonResponse(400,['message'=>'token kadaluwarsa']);
                         break;
 
+                    case 4461:
+                        return $this->jsonResponse(400,['message'=>'token tidak valid']);
+                        break;
+                    
+                    case 4461:
+                        return $this->jsonResponse(400,['message'=>'token tidak valid']);
+                        break;
+                    
                     case 200:
                         return $this->jsonResponse(200,['message'=>'token tervalidasi']);
                         break;

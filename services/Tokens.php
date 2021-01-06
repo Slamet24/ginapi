@@ -19,13 +19,19 @@ class Tokens {
 
     public function validateToken($token)
     {
+        $tokenDecoded = new TokenDecoded();
+        $tokenEncoded = $tokenDecoded->encode('sha2gin', JWT::ALGORITHM_HS512);
         try {
             $tokenEncoded->validate($token, JWT::ALGORITHM_HS512);
             return 200;
-        } catch(IntegrityViolationException | AlgorithmMismatchException | Exception $e) {
+        } catch(Exception $e) {
             return 400;
         } catch(TokenExpiredException $e) {
             return 4460;
+        } catch(IntegrityViolationException $e) {
+            return 4461;
+        } catch(AlgorithmMismatchException $e) {
+            return 4462;
         }
     }
 }

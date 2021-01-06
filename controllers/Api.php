@@ -1,33 +1,11 @@
 <?php
-/*
-    Aturan membuat controller :
-    - Tambahkan namespace app\controllers
-    - Tambahkan use app\core\Controllers
-    - Tambahkan use app\core\Request
-    - Extends class controller yang kamu buat dengan Controller
-    
-    Aturan mengambil data GET/POST :
-    - Masukkan $request->getBody() ke variable $body
-    - Jika ingin mengambil data spesifik, contoh :
-        http://localhost/home?id=100&var1=apa&var2=ini
-        // jika ingin mengambil data var2, maka :
-        $body = $request->getBody();
-        $body['var2'];
-        // Cara ini bisa digunakan di program baik method get/post
-*/
 namespace app\controllers;
 use app\core\Controller;
 use app\core\Request;
 use app\core\Database;
+use app\services\Tokens;
 
-class Contoh extends Controller {
-
-    public function cektoken(Request $request)
-    {
-        $tokenDecoded = new TokenDecoded(['username' => 'slametfaisal1@gmail.com'], ['alg' => 'HS512','typ' => 'JWT']);
-        $tokenEncoded = $tokenDecoded->encode('sha2gin', JWT::ALGORITHM_HS512);
-        return $this->jsonResponse(200,["token" => $tokenEncoded->toString(),"expired_on" => date("h:i",time() + 60)]);
-    }
+class Api extends Controllers {
 
     public function getMainMenu(Request $request)
     {

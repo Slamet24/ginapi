@@ -7,12 +7,12 @@ class Database{
     public \PDO $pdo;
 	private $db = "pgsql";
 	private $serv = "localhost";
-    private $user = "postgres";
-    private $pass = "Nidumila";
-    private $dbname = "ginapi";
+    private $user = "sha2";
+    private $pass = "ginapi";
+    private $dbname = "core_api";
     
     public function __construct(){
-        $this->pdo = new \PDO("$this->db:host=$this->serv;port=5432;dbname=$this->dbname", $this->user, $this->pass);
+        $this->pdo = new \PDO("$this->db:host=$this->serv;port=5433;dbname=$this->dbname", $this->user, $this->pass);
     }
 
     public function check()
@@ -30,7 +30,7 @@ class Database{
     
     public function selectAll($tabel)
     {
-        $hasil = $this->connect->query("SELECT * FROM $tabel");
+        $hasil = $this->pdo->query("SELECT * FROM $tabel");
         $row = $hasil->fetchAll(\PDO::FETCH_ASSOC);
 		return $row;
         $hasil = $this->pdo->query("SELECT * FROM $tabel");
@@ -49,9 +49,9 @@ class Database{
         $stocks = [];
         while ($row = $hasil->fetch(\PDO::FETCH_ASSOC)) {
             $stocks[] = [
-                'id' => $row['sq_id'],
+                'id' => $row['sq1_id'],
                 'id_pertanyaan' => $row['q_id'],
-                'sub' => $row['sub_question']
+                'sub' => $row['sub1_question']
             ];
         }
         return $stocks;
