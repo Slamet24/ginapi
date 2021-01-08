@@ -9,12 +9,11 @@ use app\core\Application;
 
 $app = new Application();
 
-$app->router->get('/',[Contoh::class,'getMainMenu']); // contoh route get
-$app->router->get('/menu',[Contoh::class,'setMainMenu']); // contoh route get
-$app->router->get('/cektoken',[Contoh::class,'cektoken']); // contoh route postc
+$app->router->get('/',[Api::class,'getMainMenu']);
+$app->router->get('/menu',[Api::class,'setMainMenu']);
 $app->router->post('/login',[User::class,'auth']);
 $app->router->get('/test',function(){
-    return password_hash("slamet24",PASSWORD_DEFAULT);
+    return var_dump($_SERVER);
 });
 
 $app->run();

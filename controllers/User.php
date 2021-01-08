@@ -1,4 +1,20 @@
 <?php
+/*
+    Aturan membuat controller :
+    - Tambahkan namespace app\controllers
+    - Tambahkan use app\core\Controllers
+    - Tambahkan use app\core\Request
+    - Extends class controller yang kamu buat dengan Controller
+    
+    Aturan mengambil data GET/POST :
+    - Masukkan $request->getBody() ke variable $body
+    - Jika ingin mengambil data spesifik, contoh :
+        http://localhost/home?id=100&var1=apa&var2=ini
+        // jika ingin mengambil data var2, maka :
+        $body = $request->getBody();
+        $body['var2'];
+        // Cara ini bisa digunakan di program baik method get/post
+*/
 namespace app\controllers;
 use app\core\Controller;
 use app\core\Request;
@@ -26,30 +42,30 @@ class User extends Controller {
                 $codeauth = $t->validateToken($token);
                 switch ($codeauth) {
                     case 400:
-                        return $this->jsonResponse(400,['message'=>'token tidak valid']);
+                        return $this->jsonResponse(401,['message'=>'token tidak valid']);
                         break;
                     
                     case 4460:
-                        return $this->jsonResponse(400,['message'=>'token kadaluwarsa']);
+                        return $this->jsonResponse(401,['message'=>'token kadaluwarsa']);
                         break;
 
                     case 4461:
-                        return $this->jsonResponse(400,['message'=>'token tidak valid']);
+                        return $this->jsonResponse(401,['message'=>'token tidak valid']);
                         break;
                     
                     case 4461:
-                        return $this->jsonResponse(400,['message'=>'token tidak valid']);
+                        return $this->jsonResponse(401,['message'=>'token tidak valid']);
                         break;
                     
                     case 200:
-                        return $this->jsonResponse(200,['message'=>'token tervalidasi']);
+                        return $this->jsonResponse(200,['message'=>'token tervalidasi','token'=>$token]);
                         break;
                     default:
                         break;
                 }
             }
-            return $this->jsonResponse(400,['message' => 'login tidak valid.']);
+            return $this->jsonResponse(401,['message' => 'login tidak valid.']);
         }
-        return $this->jsonResponse(400,['message' => 'hanya menerima POST method.']);
+        return $this->jsonResponse(401,['message' => 'hanya menerima POST method.']);
     }
 }

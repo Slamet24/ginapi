@@ -38,7 +38,6 @@ class Contoh extends Controller {
 
     public function setMainMenu(Request $request)
     {
-        error_reporting(0);
         $db = new Database();
         $body = $request->getBody();
         if (!$body['id']) {

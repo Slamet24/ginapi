@@ -4,25 +4,24 @@ use Nowakowskir\JWT\JWT;
 use Nowakowskir\JWT\TokenDecoded;
 use Nowakowskir\JWT\TokenEncoded;
 use Nowakowskir\JWT\Exceptions\IntegrityViolationException;
-use Nowakowskir\JWT\Exceptions\AlgorithmMismatchException;
 use Nowakowskir\JWT\Exceptions\TokenExpiredException;
+use Nowakowskir\JWT\Exceptions\InvalidStructureException;
 
 class Tokens {
 
     public function getToken($payload)
     {
         $payload['sandi'] = hash("sha256",$payload['sandi']);
-        $tokenDecoded = new TokenDecoded($payload, ['alg' => 'HS512','typ' => 'JWT'],['exp' => time() + 600]);
-        $tokenEncoded = $tokenDecoded->encode('sha2gin', JWT::ALGORITHM_HS512);
+        $tokenDecoded = new TokenDecoded($payload, ['alg' => 'HS512','typ' => 'JWT'],['exp' => time() + 60]);
+        $tokenEncoded = $tokenDecoded->encode('sha2gin'.date("Y-m-d"), JWT::ALGORITHM_HS512, 500);
         return $tokenEncoded->toString();
     }
 
     public function validateToken($token)
     {
-        $tokenDecoded = new TokenDecoded();
-        $tokenEncoded = $tokenDecoded->encode('sha2gin', JWT::ALGORITHM_HS512);
+        $tokenEncoded = new TokenEncoded($token);
         try {
-            $tokenEncoded->validate($token, JWT::ALGORITHM_HS512);
+            $tokenEncoded->validate('sha2gin'.date("Y-m-d"), JWT::ALGORITHM_HS512, 500);
             return 200;
         } catch(Exception $e) {
             return 400;
