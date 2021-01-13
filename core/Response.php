@@ -1,6 +1,6 @@
 <?php
 namespace app\core;
-use Rcubitto\JsonPretty\JsonPretty;
+// use Rcubitto\JsonPretty\JsonPretty;
 
 class Response {
     public function setStatusCode(int $code)
@@ -10,9 +10,9 @@ class Response {
 
     public function jsonOut(int $code,array $json)
     {
-        $jsonPretty = new JsonPretty();
+        // $jsonPretty = new JsonPretty();
         $this->setStatusCode($code);
-        // return json_encode($json,JSON_PRETTY_PRINT);
-        return $jsonPretty->print($json);
+        return json_encode($json,JSON_PRETTY_PRINT);
+        // return $jsonPretty->print($json);
     }
 }
