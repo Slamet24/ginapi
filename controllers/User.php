@@ -32,8 +32,7 @@ class User extends Controller
         $t = new Tokens();
         if ($request->isPost()) {
             $body = $request->getBody();
-            $q = $db->login($body['email']);
-            $user = $q->fetch(\PDO::FETCH_ASSOC);
+            $user = $db->login($body['email']);
             if (password_verify($body['sandi'], $user['password'])) {
                 $payload = [
                     'email' => $user['email'],
