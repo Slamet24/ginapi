@@ -56,12 +56,12 @@ class Api extends Controller
             $where = "";
             $table = "";
             $query = "";
-            $sub = "sha2" . $body['id'];
+            $sub = $body['id'];
             for ($i = 1; $i <= count($body); $i++) {
                 if ($body["sub$i"]) {
                     if ($i == 1) {
                         $table = "sub_pertanyaan_$i";
-                        $where = "sub_pertanyaan_" . ($i + 1) . ".sq" . $i . "_id = 'sha2" . $body['id'] . $body["sub$i"] . "' ";
+                        $where = "sub_pertanyaan_" . ($i + 1) . ".sq" . $i . "_id = '" . $body['id'] . $body["sub$i"] . "' ";
                         $query = "SELECT * FROM $table JOIN sub_pertanyaan_" . ($i + 1) . " ON $table.sq1_id = sub_pertanyaan_" . ($i + 1) . ".sq1_id WHERE $where";
                     } else {
                         $sub_bf = $body['sub' . $i - 1];
@@ -80,7 +80,7 @@ class Api extends Controller
             }
             return $this->jsonResponse(200, ["status" => "success", "menu" => $stocks]);
         }
-        $q = $db->getInstance()->pdo->query("SELECT * FROM sub_pertanyaan_1 WHERE q_id = 'sha20$body[id]'");
+        $q = $db->getInstance()->pdo->query("SELECT * FROM sub_pertanyaan_1 WHERE q_id = '$body[id]'");
         $stocks = [];
         while ($row = $q->fetch(\PDO::FETCH_ASSOC)) {
             $stocks[] = [
