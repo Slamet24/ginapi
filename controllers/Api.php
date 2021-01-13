@@ -15,13 +15,16 @@
         $body['var2'];
         // Cara ini bisa digunakan di program baik method get/post
 */
+
 namespace app\controllers;
+
 use app\core\Controller;
 use app\core\Request;
 use app\core\Database;
 use app\services\Tokens;
 
-class Api extends Controller {
+class Api extends Controller
+{
 
     private Request $req;
     public function __construct()
@@ -29,7 +32,7 @@ class Api extends Controller {
         $req = new Request();
         $body = $req->getBody();
         if (!$this->getAccess($body['token'] ?? null)) {
-            echo $this->jsonResponse(401,['status'=>'failed','message'=>'periksa kembali token anda.']);
+            echo $this->jsonResponse(401, ['status' => 'failed', 'message' => 'periksa kembali token anda.']);
             exit;
         }
     }
@@ -38,7 +41,7 @@ class Api extends Controller {
     {
         $db = new Database();
         $q = $db->selectAll("pertanyaan");
-        return $this->jsonResponse(200,["status"=>"success","menu"=>$q]);
+        return $this->jsonResponse(200, ["status" => "success", "menu" => $q]);
     }
 
     public function setMainMenu(Request $request)
@@ -48,34 +51,34 @@ class Api extends Controller {
         $body = $request->getBody();
         if (!$body['id']) {
             $q = $db->selectAll("pertanyaan");
-            return $this->jsonResponse(200,["status"=>"success","menu"=>$q]);
+            return $this->jsonResponse(200, ["status" => "success", "menu" => $q]);
         } else if (count($body) > 2 && $body['id']) {
             $where = "";
             $table = "";
             $query = "";
-            $sub = "sha2".$body['id'];
-            for ($i=1; $i <= count($body); $i++) { 
+            $sub = "sha2" . $body['id'];
+            for ($i = 1; $i <= count($body); $i++) {
                 if ($body["sub$i"]) {
-                    if ($i==1) {
+                    if ($i == 1) {
                         $table = "sub_pertanyaan_$i";
-                        $where = "sub_pertanyaan_".($i+1).".sq".$i."_id = 'sha2".$body['id'].$body["sub$i"]."' ";
-                        $query = "SELECT * FROM $table JOIN sub_pertanyaan_".($i+1)." ON $table.sq1_id = sub_pertanyaan_".($i+1).".sq1_id WHERE $where";
+                        $where = "sub_pertanyaan_" . ($i + 1) . ".sq" . $i . "_id = 'sha2" . $body['id'] . $body["sub$i"] . "' ";
+                        $query = "SELECT * FROM $table JOIN sub_pertanyaan_" . ($i + 1) . " ON $table.sq1_id = sub_pertanyaan_" . ($i + 1) . ".sq1_id WHERE $where";
                     } else {
-                        $sub_bf = $body['sub'.$i-1]; 
-                        $sub .= $sub_bf.$body["sub$i"];
+                        $sub_bf = $body['sub' . $i - 1];
+                        $sub .= $sub_bf . $body["sub$i"];
                         $table = "sub_pertanyaan_$i";
-                        $table_bf = "sub_pertanyaan_".($i-1);
-                        $where = "sub_pertanyaan_$i.sq".($i-1)."_id = '$sub' ";
-                        $query = "SELECT * FROM $table JOIN $table_bf ON $table.sq".($i-1)."_id = $table_bf.sq".($i-1)."_id WHERE $where";
+                        $table_bf = "sub_pertanyaan_" . ($i - 1);
+                        $where = "sub_pertanyaan_$i.sq" . ($i - 1) . "_id = '$sub' ";
+                        $query = "SELECT * FROM $table JOIN $table_bf ON $table.sq" . ($i - 1) . "_id = $table_bf.sq" . ($i - 1) . "_id WHERE $where";
                     }
                 }
             }
             $q = $db->getInstance()->pdo->query($query);
             $stocks = [];
             while ($row = $q->fetch(\PDO::FETCH_ASSOC)) {
-                array_push($stocks,$row);
+                array_push($stocks, $row);
             }
-            return $this->jsonResponse(200,["status"=>"success","menu"=>$stocks]);
+            return $this->jsonResponse(200, ["status" => "success", "menu" => $stocks]);
         }
         $q = $db->getInstance()->pdo->query("SELECT * FROM sub_pertanyaan_1 WHERE q_id = 'sha20$body[id]'");
         $stocks = [];
@@ -86,7 +89,7 @@ class Api extends Controller {
                 'sub' => $row['sub1_question']
             ];
         }
-        return $this->jsonResponse(200,["status"=>"success","menu"=>$stocks]);
+        return $this->jsonResponse(200, ["status" => "success", "menu" => $stocks]);
     }
 
     public function getAccess($token)
@@ -99,7 +102,7 @@ class Api extends Controller {
                 case 400:
                     return false;
                     break;
-                
+
                 case 4460:
                     return false;
                     break;
@@ -107,15 +110,15 @@ class Api extends Controller {
                 case 4461:
                     return false;
                     break;
-                
+
                 case 4462:
                     return false;
                     break;
-                
+
                 case 4463:
                     return false;
                     break;
-                
+
                 case 200:
                     return true;
                     break;
