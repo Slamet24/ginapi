@@ -48,11 +48,7 @@ class Database{
         $hasil = $this->pdo->query("SELECT * FROM $tabel WHERE $key = '$kondisi'");
         $stocks = [];
         while ($row = $hasil->fetch(\PDO::FETCH_ASSOC)) {
-            $stocks[] = [
-                'id' => $row['sq1_id'],
-                'id_pertanyaan' => $row['q_id'],
-                'sub' => $row['sub1_question']
-            ];
+            array_push($stocks,$row);
         }
         return $stocks;
     }

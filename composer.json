@@ -13,6 +13,7 @@
     },
     "require": {
         "rcubitto/json-pretty": "^0.1.5",
-        "nowakowskir/php-jwt": "^2.0"
+        "nowakowskir/php-jwt": "^2.0",
+        "botman/driver-telegram": "^1.6"
     }
 }

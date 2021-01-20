@@ -13,16 +13,19 @@ class Router {
         $this->response = $response;
     }
 
+    // Mendapatkan alamat url dan callback dengan method Get
     public function get($path,$callback)
     {
         $this->routes['get'][$path] = $callback;
     }
     
+    // Mendapatkan alamat url dan callback dengan method Get
     public function post($path,$callback)
     {
         $this->routes['post'][$path] = $callback;
     }
 
+    // Mendapatkan data request get ataupun post
     public function resolve()
     {
         $path = $this->request->getPath();

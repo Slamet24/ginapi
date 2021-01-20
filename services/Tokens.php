@@ -31,8 +31,6 @@ class Tokens {
             return 4461;
         } catch(AlgorithmMismatchException $e) {
             return 4462;
-        } catch(InvalidStructureException $e) {
-            return 4463;
         }
     }
 }

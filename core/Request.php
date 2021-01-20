@@ -3,6 +3,7 @@ namespace app\core;
 
 class Request {
 
+    // Mendapatkan alamat url
     public function getPath()
     {
         $path = $_SERVER['REQUEST_URI'] ?? '/';
@@ -13,21 +14,25 @@ class Request {
         return substr($path,0,$position);
     }
 
+    // Mendapatkan info method yang digunakan
     public function method()
     {
         return strtolower($_SERVER['REQUEST_METHOD']);
     }
 
+    // Mencheck apakah method berupa Get
     public function isGet()
     {
         return $this->method() === 'get';
     }
 
+    // Mencheck apakah method berupa Post
     public function isPost()
     {
         return $this->method() === 'post';
     }
 
+    // Mendapatkan data yang dikirim baik menggunakan method get atau post
     public function getBody()
     {
         $body = [];

@@ -22,6 +22,18 @@ use app\core\Database;
 
 class Contoh extends Controller {
 
+    public function createUser(Request $request)
+    {
+        $body = $request->getBody();
+        $db = new Database();
+        $id = rand(1,100);
+        $pass = password_hash($body['sandi'],PASSWORD_DEFAULT);
+        $date = date("Y-m-d h:m");
+        $db->getInstance()->pdo->query("INSERT INTO users VALUES (sha2u$id,$body[email],$pass,$date)");
+
+        return $this->jsonResponse([ "message"=>"account created" ]);
+    }
+    
     public function cektoken(Request $request)
     {
         $tokenDecoded = new TokenDecoded(['username' => 'slametfaisal1@gmail.com'], ['alg' => 'HS512','typ' => 'JWT']);

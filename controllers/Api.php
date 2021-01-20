@@ -125,4 +125,34 @@ class Api extends Controller {
         }
         return false;
     }
+
+    // GinBot
+
+    public function getMenu()
+    {
+        $db = new Database();
+        $q = $db->selectAll("pertanyaan");
+        return json_encode($q);
+    }
+
+    public function setMenu($id)
+    {
+        $db = new Database();
+        $q = $db->select("sub_pertanyaan_1","q_id",$id);
+        return json_encode($q);
+    }
+
+    public function setSub1($id)
+    {
+        $db = new Database();
+        $q = $db->select("sub_pertanyaan_2","sq1_id",$id);
+        return json_encode($q);
+    }
+
+    public function setSub1($id)
+    {
+        $db = new Database();
+        $q = $db->select("sub_pertanyaan_3","sq2_id",$id);
+        return json_encode($q);
+    }
 }
