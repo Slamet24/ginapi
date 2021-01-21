@@ -22,7 +22,7 @@ $ginbot = BotManFactory::create($configs);
 
 $ginbot->hears("/start", function (BotMan $bot) {
     $user = $bot->getUser();
-    $bot->reply("✨ GinBot\nSelamat Datang, " . $user->getFirstName() . "!✨✨\n\n☛ List Perintah di GinBot:\n➤ /start Memulai percakapan dengan Bot.\n➤ /bantuan Menampilkan teks ini.\n➤ /menu Menampilkan menu.");
+    $bot->reply("✨ GinBot\nSelamat Datang, Kak " . $user->getFirstName() . "!✨✨\n\n☛ List Perintah di GinBot:\n➤ /start Memulai percakapan dengan Bot.\n➤ /bantuan Menampilkan teks ini.\n➤ /menu Menampilkan menu.");
 });
 
 $ginbot->hears("/bantuan", function (BotMan $bot) {
@@ -46,68 +46,60 @@ $ginbot->hears("Pilih menu ([0-9]+)", function (BotMan $bot, $number) {
     $db = new Database();
     $jenis = $db->getInstance()->pdo->query("SELECT * FROM pertanyaan WHERE q_id = '$number'")->fetch(\PDO::FETCH_ASSOC);
     $q = $db->select("sub_pertanyaan_1", "q_id", $number);
-    $sub = "✨ $jenis[question] ✨\n\nYey " . $user->getFirstName() . " telah memilih jenis $jenis[question],\nberikut list $jenis[question] yang tersedia:\n\n";
+    $sub = "✨ $jenis[question] ✨\n\nYey Kak " . $user->getFirstName() . " telah memilih jenis $jenis[question],\nberikut list $jenis[question] yang tersedia:\n\n";
     $i = 1;
     foreach ($q as $d) {
         $sub .= $i . ". " . $d['sub1_question'] . "\n";
         $i++;
     }
-    $sub .= "\nJawab dengan mengetik:\n'Pilih [nomor menu] pada menu 1'\nContoh, 'Pilih 2 pada menu 1'.";
+    $sub .= "\nJawab dengan mengetik: 'Pilih [nomor menu] pada menu $number'\nContoh: Pilih 2 pada menu $number";
     $bot->reply($sub);
 });
 
-$ginbot->hears("Pilih ([0-9]+) pada menu (1|2|3)", function (BotMan $bot, $number, $dish) {
+$ginbot->hears("Pilih ([0-9]+) pada menu ([0-9]+)", function (BotMan $bot, $number, $dish) {
     $db = new Database();
     $key = $dish . $number;
+    $jenis = $db->getInstance()->pdo->query("SELECT * FROM sub_pertanyaan_1 WHERE sq1_id = '$key'")->fetch(\PDO::FETCH_ASSOC);
     $q = $db->select("sub_pertanyaan_2", "sq1_id", $key);
-    $sub = "✨ Isi Sub $number Pada Menu $dish ✨\n\n";
-    $i = 1;
+    $sub = "✨ $jenis[sub1_question] ✨\n\n";
     foreach ($q as $d) {
-        $sub .= $i . ". " . $d['sub2_question'] . "\n";
-        $i++;
+        $sub .=  " - " . $d['sub2_question'] . "\n";
     }
-    $sub .= "\nJawab dengan mengetik:\n'Pilih [nomor menu] pada menu 1'\nContoh, 'Pilih 2 pada menu 1'.";
+    $sub .= "\nJawab dengan mengetik:\n'Intip [pilihan] hidangan $jenis[sub1_question]'\nContoh: \nIntip Bahan-bahan $jenis[sub1_question]\nIntip Cara Pembuatan $jenis[sub1_question]";
     $bot->reply($sub);
 });
 
-// $ginbot->hears("Pilih menu ([0-9]+)", function (BotMan $bot, $number) {
-//     $data = json_decode(Api::setMenu($number), true);
-//     $menu = "✨ Menu ✨\n\n";
-//     $i = 1;
-//     foreach ($data as $d) {
-//         $menu .= $i . ". " . $d['sub1_question'] . "\n";
-//         $i++;
-//     }
-//     $menu .= "\nJawab dengan mengetik:\n'Pilih sub1 [nomor menu]'\nContoh, 'Pilih sub1 1'";
-//     $bot->reply($menu);
-// });
-
-// $ginbot->hears("Pilih sub1 ([0-9]+)", function (BotMan $bot, $number) {
-//     $data = json_decode(Api::setSub1($bot . $number), true);
-//     $menu = "✨ Menu ✨\n\n";
-//     $i = 1;
-//     foreach ($data as $d) {
-//         $menu .= $i . ". " . $d['sub2_question'] . "\n";
-//         $i++;
-//     }
-//     $menu .= "\nJawab dengan mengetik:\n'Pilih sub2 [nomor menu]'\nContoh, 'Pilih sub2 1'.";
-//     $bot->reply($menu);
-// });
-
-// $ginbot->hears("Pilih sub2 ([0-9]+)", function (BotMan $bot, $number) {
-//     $data = json_decode(Api::setSub2($number), true);
-//     $menu = "✨ Menu ✨\n\n";
-//     $i = 1;
-//     foreach ($data as $d) {
-//         $menu .= $i . ". " . $d['sub3_question'] . "\n";
-//         $i++;
-//     }
-//     $menu .= "\nJawab dengan mengetik:\n'Pilih sub3 [nomor menu]'\nContoh, 'Pilih sub3 1'.";
-//     $bot->reply($menu);
-// });
+$ginbot->hears("Intip (Bahan-bahan|Cara Pembuatan) (Siomay Ikan|Serabi|Martabak Telur|Pie|Pasta Macaroni Daging|Canape Crackers|Ayam Goreng Lengkuas|Nasi Goreng Cumi|Tumis Tahu Hijau|Es Blewah Serut|Pudding Bobba Thai Tea|Cake Stroberi Kelapa)", function (BotMan $bot, $dish, $hidangan) {
+    $user = $bot->getUser();
+    $db = new Database();
+    $jenis = $db->getInstance()->pdo->query("SELECT * FROM sub_pertanyaan_1 WHERE sub1_question = '$hidangan'")->fetch(\PDO::FETCH_ASSOC);
+    if ($dish == 'Bahan-bahan') {
+        $q = $db->select("bahan", "sq1_id", $jenis['sq1_id']);
+        $sub = "✨ $jenis[sub1_question] ✨\n\nBerikut berbagai macam bahan untuk membuat $jenis[sub1_question]:\n\n";
+        $i = 1;
+        foreach ($q as $d) {
+            $sub .= $i . ". " . $d['list_bahan'] . "\n";
+            $i++;
+        }
+        $sub .= "\nUntuk mengetahui cara pembuatannya, balas dengan mengetik 'Intip Cara Pembuatan $jenis[sub1_question]'";
+        $bot->reply($sub);
+    } else if ($dish == 'Cara Pembuatan') {
+        $q = $db->select("pembuatan", "sq1_id", $jenis['sq1_id']);
+        $sub = "✨ $jenis[sub1_question] ✨\n\nBerikut cara pembuatan $jenis[sub1_question]:\n\n";
+        $i = 1;
+        foreach ($q as $d) {
+            $sub .= $i . ". " . $d['cara'] . "\n";
+            $i++;
+        }
+        $sub = "\nUntuk mengetahui bahan untuk membuatnya, balas dengan mengetik 'Intip Bahan-bahan $jenis[sub1_question]'";
+        $bot->reply($sub);
+    }
+    $bot->reply("Apakah info hidangan $jenis[sub1_question] dari Ginapi bot membantu Kak " . $user->getFirstName() . "?\na. Iya\nb. Tidak\n\nJawab dengan mengetik: 'Report [pilihan]'\nContoh: Report Iya");
+});
 
 $ginbot->fallback(function ($bot) {
-    $bot->reply('Sorry, I did not understand these commands. Here is a list of commands I understand: ...');
+    $user = $bot->getUser();
+    $bot->reply("Maaf, Saya tidak mengerti maksud Kak " . $user->getFirstName() . ". \nMohon cek kembali atau coba perintah lain...");
 });
 
 $ginbot->listen();
