@@ -152,7 +152,7 @@ class Api extends Controller
         return json_encode($q);
     }
 
-    public function setSub1($id)
+    public function setSub2($id)
     {
         $db = new Database();
         $q = $db->select("sub_pertanyaan_3","sq2_id",$id);
