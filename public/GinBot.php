@@ -10,9 +10,7 @@ use app\controllers\Api;
 use app\core\Database;
 
 $configs = [
-    "telegram" => [
-        // "token" => "1502889376:AAEJlFbg_oYSFdKJl0tMiYXAdIYZxw6FroY"
-        "token" => "1551688607:AAGbnccYV5bshv6mXMDZ9Xc6dXo6PCJb34w"
+    "telegram" => ["token" => "1551688607:AAGbnccYV5bshv6mXMDZ9Xc6dXo6PCJb34w"
     ]
 ];
 
@@ -22,11 +20,11 @@ $ginbot = BotManFactory::create($configs);
 
 $ginbot->hears("/start", function (BotMan $bot) {
     $user = $bot->getUser();
-    $bot->reply("✨ GinBot\nSelamat Datang, Kak " . $user->getFirstName() . "!✨✨\n\n☛ List Perintah di GinBot:\n➤ /start Memulai percakapan dengan Bot.\n➤ /bantuan Menampilkan teks ini.\n➤ /menu Menampilkan menu.");
+    $bot->reply("✨ Ginapi Bot ✨\nSelamat Datang, Kak " . $user->getFirstName() . "!\n\n☛ List Perintah di Ginapi Bot:\n➤ /start Memulai percakapan dengan Bot.\n➤ /bantuan Menampilkan teks ini.\n➤ /menu Menampilkan menu.");
 });
 
 $ginbot->hears("/bantuan", function (BotMan $bot) {
-    $bot->reply("✨ GinBot\n\n☛ List Perintah di GinBot:\n➤ /start Memulai percakapan dengan Bot.\n➤ /bantuan Menampilkan teks ini.\n➤ /menu Menampilkan menu.");
+    $bot->reply("✨ Ginapi Bot ✨\n\n☛ List Perintah di Ginapi Bot:\n➤ /start Memulai percakapan dengan Bot.\n➤ /bantuan Menampilkan teks ini.\n➤ /menu Menampilkan menu.");
 });
 
 $ginbot->hears("/menu", function (BotMan $bot) {
@@ -76,25 +74,31 @@ $ginbot->hears("Intip (Bahan-bahan|Cara Pembuatan) (Siomay Ikan|Serabi|Martabak 
     if ($dish == 'Bahan-bahan') {
         $q = $db->select("bahan", "sq1_id", $jenis['sq1_id']);
         $sub = "✨ $jenis[sub1_question] ✨\n\nBerikut berbagai macam bahan untuk membuat $jenis[sub1_question]:\n\n";
-        $i = 1;
         foreach ($q as $d) {
-            $sub .= $i . ". " . $d['list_bahan'] . "\n";
-            $i++;
+            $sub .= " - " . $d['list_bahan'] . "\n";
         }
         $sub .= "\nUntuk mengetahui cara pembuatannya, balas dengan mengetik 'Intip Cara Pembuatan $jenis[sub1_question]'";
         $bot->reply($sub);
     } else if ($dish == 'Cara Pembuatan') {
         $q = $db->select("pembuatan", "sq1_id", $jenis['sq1_id']);
         $sub = "✨ $jenis[sub1_question] ✨\n\nBerikut cara pembuatan $jenis[sub1_question]:\n\n";
-        $i = 1;
         foreach ($q as $d) {
-            $sub .= $i . ". " . $d['cara'] . "\n";
-            $i++;
+            $sub .=  " - " . $d['cara'] . "\n";
         }
-        $sub = "\nUntuk mengetahui bahan untuk membuatnya, balas dengan mengetik 'Intip Bahan-bahan $jenis[sub1_question]'";
+        $sub .= "\nUntuk mengetahui bahan untuk membuatnya, balas dengan mengetik 'Intip Bahan-bahan $jenis[sub1_question]'";
         $bot->reply($sub);
     }
     $bot->reply("Apakah info hidangan $jenis[sub1_question] dari Ginapi bot membantu Kak " . $user->getFirstName() . "?\na. Iya\nb. Tidak\n\nJawab dengan mengetik: 'Report [pilihan]'\nContoh: Report Iya");
+});
+
+$ginbot->hears("Report (Iya|Tidak)", function ($bot, $report) {
+    $user = $bot->getUser();
+    if($report == 'Tidak'){
+        $bot->reply("Terimakasih atas responnya Kak.\nMohon maaf apabila Ginapi bot masih belum sesuai dengan keinginan Kak " .  $user->getFirstName() . ". Ginapi team akan berusaha sebisa mungkin mengembangkan kembali Ginapi bot agar semakin sesuai dengan keinginan Kak ".  $user->getFirstName() . " dan pengguna lain.🙏🏻");
+    } else if($report == 'Iya'){
+        $bot->reply("Terimakasih atas responnya Kak.\nGinapi team akan berusaha sebisa mungkin terus mengembangkan kembali Ginapi bot agar bisa lebih membantu Kak ".  $user->getFirstName() . " dan pengguna lain dalam mencari info seputar makanan.😊\n\nSilahkan coba pilih menu hidangan lainnya Kak ".  $user->getFirstName() . "🙏🏻");
+    }
+    $bot->reply("Untuk mencoba memilih menu lain, harap klik 👉🏻 /menu");
 });
 
 $ginbot->fallback(function ($bot) {
